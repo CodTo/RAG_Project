@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG-System Frontend</title>
+</head>
+<body>
+    <h1>RAG-System: Frage stellen</h1>
+    <input type="text" id="question" placeholder="Gib deine Frage ein" />
+    <button onclick="askQuestion()">Frage senden</button>
+    <p><strong>Antwort:</strong> <span id="answer">...</span></p>
+
+    <script>
+        async function askQuestion() {
+            const question = document.getElementById('question').value;
+            const response = await fetch('http://127.0.0.1:5000/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            const data = await response.json();
+            document.getElementById('answer').innerText = data.answer || 'Keine Antwort erhalten';
+        }
+    </script>
+</body>
+</html>
