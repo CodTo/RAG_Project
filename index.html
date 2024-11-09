@@ -11,6 +11,11 @@
     <button onclick="askQuestion()">Frage senden</button>
     <p><strong>Antwort:</strong> <span id="answer">...</span></p>
 
+    <h1>Dokument hochladen</h1>
+    <input type="file" id="file" />
+    <button onclick="uploadDocument()">Dokument hochladen</button>
+    <p id="uploadStatus"></p>
+
     <script>
         async function askQuestion() {
             const question = document.getElementById('question').value;
@@ -24,6 +29,26 @@
 
             const data = await response.json();
             document.getElementById('answer').innerText = data.answer || 'Keine Antwort erhalten';
+        }
+
+        async function uploadDocument() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+            if (!file) {
+                document.getElementById('uploadStatus').innerText = 'Bitte wählen Sie eine Datei aus.';
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('http://127.0.0.1:5000/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById('uploadStatus').innerText = data.message || 'Fehler beim Hochladen';
         }
     </script>
 </body>
